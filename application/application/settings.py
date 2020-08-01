@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'application.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'social_network',
+        'NAME': 'webshop',
         'USER': os.getenv('SOCIAL_NETWORK_POSTGRESQL_USER'),
         'PASSWORD': os.getenv('SOCIAL_NETWORK_POSTGRESQL_PASSWORD'),
         'HOST': '127.0.0.1',

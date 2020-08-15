@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from .models import GoodCategory, GoodType, Unit, Good, PlaceType, Contact, \
                     PhoneNumber, Email, Url, Address, GoodPlace, GoodCost, \
-                    GoodCount, Employee, GoodSubjectArea
+                    GoodCount, Employee, GoodSubjectArea, Currency
 
 admin.site.register(GoodCategory)
 admin.site.register(GoodType)
@@ -19,3 +19,4 @@ admin.site.register(GoodCost)
 admin.site.register(GoodCount)
 admin.site.register(Employee)
 admin.site.register(GoodSubjectArea)
+admin.site.register(Currency)

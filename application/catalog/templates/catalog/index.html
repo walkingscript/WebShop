@@ -3,7 +3,7 @@
 {% block title %}Каталог товаров{% endblock %}
 
 {% block content %}
-
-    {{ info }}
-
+    {% for item in gc %}
+         <p>{{ forloop.counter }}) {{ item.name }}</p>
+    {% endfor %}
 {% endblock %}

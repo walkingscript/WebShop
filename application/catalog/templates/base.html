@@ -4,14 +4,15 @@
 <head>
     {% load static %}
     <meta charset="utf-8">
+    {% block meta %}{% endblock %}
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'catalog/styles/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    {% block style %}{% endblock %}
 </head>
 
 <body>
 
 {% block content %}
-
 
 {% endblock %}
 

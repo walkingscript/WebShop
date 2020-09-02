@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    {% block meta %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'catalog/css/index.css' %}">
+    {% block style %}{% endblock %}
+</head>
+<body>
+    <nav id="main">
+        <ul>
+            <li>Главная</li>
+            <li>Каталог</li>
+            <li>Контакты</li>
+        </ul>
+    </nav>
+
+
+    {% block content %}
+
+    {% endblock %}
+
+    <footer>
+        Developer - Alexander Bondarenko
+    </footer>
+
+</body>
+</html>

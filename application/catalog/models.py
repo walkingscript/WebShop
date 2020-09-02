@@ -9,34 +9,38 @@ class GoodSubjectArea(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = 'goods subject area'
+        verbose_name_plural = 'предметные области товаров'
+        verbose_name = 'предметная область товара'
 
 
 class GoodCategory(models.Model):
     """Категории, к которым могут относиться товары"""
-    subject_area_set = models.ForeignKey(GoodSubjectArea,
-                                         verbose_name='предметная область',
-                                         on_delete=models.DO_NOTHING,
-                                         null=True)
+    subject_area = models.ForeignKey(GoodSubjectArea,
+                                     verbose_name='предметная область',
+                                     on_delete=models.PROTECT,
+                                     null=True)
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        return f'{self.name}; Предметная область: {self.subject_area_set.name}'
+        return f'{self.name}; Предметная область: {self.subject_area.name}'
 
     class Meta:
-        verbose_name_plural = 'goods categories'
+        verbose_name_plural = 'категории товаров'
+        verbose_name = 'категория товара'
 
 
 class GoodType(models.Model):
     """Типы товаров, относящиеся к категориям"""
-    category_set = models.ForeignKey(GoodCategory, on_delete=models.DO_NOTHING)
+    category = models.ForeignKey(GoodCategory, on_delete=models.PROTECT,
+                                 null=True)
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        return f'{self.name}; Категория: {self.category_set}'
+        return f'{self.name}; Категория: {self.category}'
 
     class Meta:
-        verbose_name_plural = 'goods types'
+        verbose_name_plural = 'типы товаров'
+        verbose_name = 'тип товара'
 
 
 class Unit(models.Model):
@@ -47,19 +51,27 @@ class Unit(models.Model):
     def __str__(self):
         return self.short_name
 
+    class Meta:
+        verbose_name_plural = 'единицы измерения'
+        verbose_name = 'единица измерения'
+
 
 class Good(models.Model):
     """Товары, которые могут продаваться в магазине"""
-    type_set = models.ForeignKey(GoodType, verbose_name='тип',
-                                 on_delete=models.DO_NOTHING)
-    unit_set = models.ForeignKey(Unit, verbose_name='единица измерения',
-                                 on_delete=models.DO_NOTHING)
+    type = models.ForeignKey(GoodType, verbose_name='тип',
+                             on_delete=models.PROTECT, null=True)
+    unit = models.ForeignKey(Unit, verbose_name='единица измерения',
+                             on_delete=models.PROTECT, null=True)
     name = models.CharField(max_length=300, verbose_name='наименовние')
     code = models.CharField(max_length=50, verbose_name='код')
     description = models.TextField(verbose_name='описание товара', null=True)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name_plural = 'товары'
+        verbose_name = 'товар'
 
 
 class PlaceType(models.Model):
@@ -69,6 +81,10 @@ class PlaceType(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name_plural = 'типы мест размещения товаров'
+        verbose_name = 'тип места размещения товара'
 
 
 class Contact(models.Model):
@@ -81,35 +97,51 @@ class Contact(models.Model):
         return f'{self.first_name} {self.last_name} ' \
                f'{f", паспорт {str(self.passport).upper()}" if self.passport else ""}'
 
+    class Meta:
+        verbose_name_plural = 'контакты'
+        verbose_name = 'контакт'
+
 
 class PhoneNumber(models.Model):
     """Номера телефонов сотрудников, клиентов, и др."""
-    contact_set = models.ForeignKey(Contact, verbose_name='контакт',
-                                    on_delete=models.DO_NOTHING)
+    contact = models.ForeignKey(Contact, verbose_name='контакт',
+                                on_delete=models.PROTECT, null=True)
     phone_number = models.CharField(max_length=30, verbose_name='номер телефона')
 
     def __str__(self):
         return self.phone_number
 
+    class Meta:
+        verbose_name_plural = 'номера телефонов'
+        verbose_name = 'номер телефона'
+
 
 class Email(models.Model):
     """Адреса электронной почты сотрудников, клиентов и др."""
-    contact_set = models.ForeignKey(Contact, verbose_name='контакт',
-                                    on_delete=models.DO_NOTHING)
+    contact = models.ForeignKey(Contact, verbose_name='контакт',
+                                on_delete=models.PROTECT, null=True)
     email = models.CharField(max_length=100, verbose_name='электронная почта')
 
     def __str__(self):
         return self.email
 
+    class Meta:
+        verbose_name_plural = 'адреса электронной почты'
+        verbose_name = 'адрес электронной почты'
+
 
 class Url(models.Model):
     """Ссылки на различные ресурсы, относящиеся к сотрудникам, клиентам и др."""
-    contact_set = models.ForeignKey(Contact, verbose_name='контакт',
-                                    on_delete=models.DO_NOTHING)
+    contact = models.ForeignKey(Contact, verbose_name='контакт',
+                                on_delete=models.PROTECT, null=True)
     url = models.TextField(verbose_name='ссылка')
 
     def __str__(self):
         return self.url
+
+    class Meta:
+        verbose_name_plural = 'ссылки'
+        verbose_name = 'ссылка'
 
 
 class Address(models.Model):
@@ -136,24 +168,26 @@ class Address(models.Model):
                f'{f", пом. {self.room}" if self.room else ""}'
 
     class Meta:
-        verbose_name_plural = 'addresses'
+        verbose_name_plural = 'адреса'
+        verbose_name = 'адрес'
 
 
 class GoodPlace(models.Model):
     """Места расположения товаров."""
-    place_type_set = models.ForeignKey(PlaceType, verbose_name='тип места',
-                                       on_delete=models.DO_NOTHING)
-    address_set = models.ForeignKey(Address, verbose_name='адрес',
-                                    on_delete=models.CASCADE)
-    contact_set = models.ForeignKey(Contact, verbose_name='контакт',
-                                    on_delete=models.CASCADE)
+    place_type = models.ForeignKey(PlaceType, verbose_name='тип места',
+                                   on_delete=models.PROTECT, null=True)
+    address = models.ForeignKey(Address, verbose_name='адрес',
+                                on_delete=models.CASCADE)
+    contact = models.ForeignKey(Contact, verbose_name='контакт',
+                                on_delete=models.CASCADE)
     name = models.CharField(max_length=300, verbose_name='название')
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name_plural = 'goods place'
+        verbose_name_plural = 'места расположения товаров'
+        verbose_name = 'место расположения товара'
 
 
 class Currency(models.Model):
@@ -164,52 +198,58 @@ class Currency(models.Model):
         return f'{self.short_name} - {self.name}'
 
     class Meta:
-        verbose_name_plural = 'currency'
+        verbose_name_plural = 'валюты'
+        verbose_name = 'валюта'
 
 
 class GoodCost(models.Model):
     """Сведения о ценах на товар в разных магазинах."""
-    good_place_set = models.ForeignKey(GoodPlace,
-                                       verbose_name='месторасположение товара',
-                                       on_delete=models.DO_NOTHING)
-    good_set = models.ForeignKey(Good, verbose_name='товар',
-                                 on_delete=models.DO_NOTHING)
-    currency_set = models.ForeignKey(Currency, verbose_name='валюта',
-                                     on_delete=models.DO_NOTHING,
-                                     null=True)
+    good_place = models.ForeignKey(GoodPlace,
+                                   verbose_name='месторасположение товара',
+                                   on_delete=models.PROTECT, null=True)
+    good = models.ForeignKey(Good, verbose_name='товар',
+                             on_delete=models.PROTECT, null=True)
+    currency = models.ForeignKey(Currency, verbose_name='валюта',
+                                 on_delete=models.PROTECT, null=True)
     cost = models.FloatField(verbose_name='цена товара')
 
     def __str__(self):
-        return f'{self.good_place_set}\n{self.good_set.name}\nСтоимость: {self.cost}'
+        return f'{self.good_place}\n{self.good.name}\nСтоимость: {self.cost}'
 
     class Meta:
-        verbose_name_plural = 'goods cost'
+        verbose_name_plural = 'цены на товары'
+        verbose_name = 'цена товара'
 
 
 class GoodCount(models.Model):
     """Количество каждого наименования товара в каждом магазине."""
-    good_place_set = models.ForeignKey(GoodPlace, verbose_name='местонахождение',
-                                       on_delete=models.DO_NOTHING)
-    good_set = models.ForeignKey(Good, verbose_name='товар',
-                                 on_delete=models.DO_NOTHING)
+    good_place = models.ForeignKey(GoodPlace, verbose_name='местонахождение',
+                                   on_delete=models.PROTECT, null=True)
+    good = models.ForeignKey(Good, verbose_name='товар',
+                             on_delete=models.PROTECT, null=True)
     count = models.FloatField(default=0.0, verbose_name='количество')
 
     def __str__(self):
-        return f'{self.good_place_set.name}\n{self.good_set.name}\nКоличество: {self.count}'
+        return f'{self.good_place.name}\n{self.good.name}\nКоличество: {self.count}'
 
     class Meta:
-        verbose_name_plural = 'goods count'
+        verbose_name_plural = 'количество товаров'
+        verbose_name = 'количество товара'
 
 
 class Employee(models.Model):
     """Сотрудники магазинов."""
-    contact_set = models.ForeignKey(Contact, verbose_name='контакт сотрудника',
-                                    on_delete=models.CASCADE)
-    address_set = models.ForeignKey(Address, verbose_name='адрес сотрудника',
-                                    on_delete=models.CASCADE)
-    job_place_set = models.ForeignKey(GoodPlace, verbose_name='место работы',
-                                      on_delete=models.DO_NOTHING)
+    contact = models.ForeignKey(Contact, verbose_name='контакт сотрудника',
+                                on_delete=models.CASCADE)
+    address = models.ForeignKey(Address, verbose_name='адрес сотрудника',
+                                on_delete=models.CASCADE)
+    job_place = models.ForeignKey(GoodPlace, verbose_name='место работы',
+                                  on_delete=models.PROTECT, null=True)
     position_name = models.CharField(max_length=50, verbose_name='должность')
 
     def __str__(self):
         return self.position_name
+
+    class Meta:
+        verbose_name_plural = 'сотрудники магазинов'
+        verbose_name = 'сотрудник магазина'

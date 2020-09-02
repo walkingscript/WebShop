@@ -7,9 +7,9 @@ from .models import GoodCategory
 def index(request: HttpRequest) -> HttpResponse:
     """View для отображения главной страницы каталога товаров."""
 
-    gc = GoodCategory.objects.all()
+    categories = GoodCategory.objects.all()
 
     context = {
-        'gc': gc
+        'categories': categories
     }
     return render(request, 'catalog/index.html', context)

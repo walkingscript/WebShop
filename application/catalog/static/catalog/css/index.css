@@ -1,0 +1,37 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-size: 15px;
+    font-family: 'Noto Sans', 'Courier New', Courier, monospace;
+}
+
+nav#main {
+    height: 20%;
+    background-color: magenta;
+}
+
+/* goods categories */
+.categories-set {
+    width: 100%;
+    background-color: lightblue;
+}
+
+.category {
+
+}
+
+.category-name {
+
+}
+
+.category-goods-count {
+
+}
+/* end goods categories */
+
+footer {
+    background-color: pink;
+}

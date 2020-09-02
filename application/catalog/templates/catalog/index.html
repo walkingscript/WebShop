@@ -1,9 +1,19 @@
-{% extends "base.html" %}
+{% extends "catalog/base.html" %}
+{% load static %}
 
 {% block title %}Каталог товаров{% endblock %}
 
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'catalog/css/index.css' %}">
+{% endblock %}
+
 {% block content %}
-    {% for item in gc %}
-         <p>{{ forloop.counter }}) {{ item.name }}</p>
-    {% endfor %}
+
+<div class="categories-set">
+{% for category in categories %}
+    <p class="category-name">{{ category.name }}</p>
+{% endfor %}
+</div>
+
+<script src="{% static 'catalog/js/app.js' %}"></script>
 {% endblock %}

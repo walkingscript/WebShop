@@ -2,7 +2,7 @@ from django.db import models
 
 
 class GoodSubjectArea(models.Model):
-    """Предметная область, в которой находится товар."""
+    """Subject area which includes a good."""
     name = models.CharField(max_length=50)
 
     def __str__(self):
@@ -14,10 +14,8 @@ class GoodSubjectArea(models.Model):
 
 
 class GoodCategory(models.Model):
-    """Категории, к которым могут относиться товары"""
-    subject_area = models.ForeignKey(GoodSubjectArea,
-                                     verbose_name='предметная область',
-                                     on_delete=models.PROTECT,
+    """Categories where goods can be related to."""
+    subject_area = models.ForeignKey(GoodSubjectArea, verbose_name='предметная область', on_delete=models.PROTECT,
                                      null=True)
     name = models.CharField(max_length=50)
 
@@ -30,9 +28,8 @@ class GoodCategory(models.Model):
 
 
 class GoodType(models.Model):
-    """Типы товаров, относящиеся к категориям"""
-    category = models.ForeignKey(GoodCategory, on_delete=models.PROTECT,
-                                 null=True)
+    """Types of goods related to the categories."""
+    category = models.ForeignKey(GoodCategory, on_delete=models.PROTECT, null=True)
     name = models.CharField(max_length=50)
 
     def __str__(self):
@@ -44,7 +41,7 @@ class GoodType(models.Model):
 
 
 class Unit(models.Model):
-    """Единицы измерения, в которых может исчисляться товар"""
+    """Units which goods can be counted in."""
     full_name = models.CharField(max_length=20)
     short_name = models.CharField(max_length=5)
 
@@ -57,11 +54,9 @@ class Unit(models.Model):
 
 
 class Good(models.Model):
-    """Товары, которые могут продаваться в магазине"""
-    type = models.ForeignKey(GoodType, verbose_name='тип',
-                             on_delete=models.PROTECT, null=True)
-    unit = models.ForeignKey(Unit, verbose_name='единица измерения',
-                             on_delete=models.PROTECT, null=True)
+    """Goods which the shop can sell in."""
+    type = models.ForeignKey(GoodType, verbose_name='тип', on_delete=models.PROTECT, null=True)
+    unit = models.ForeignKey(Unit, verbose_name='единица измерения', on_delete=models.PROTECT, null=True)
     name = models.CharField(max_length=300, verbose_name='наименовние')
     code = models.CharField(max_length=50, verbose_name='код')
     description = models.TextField(verbose_name='описание товара', null=True)
@@ -75,8 +70,8 @@ class Good(models.Model):
 
 
 class PlaceType(models.Model):
-    """Тип места размещения товара.
-    Примеры: склад, магазин, пункт самовывоза"""
+    """Types of good's location.
+    Examples: warehouse, shop, pickup point"""
     name = models.CharField(max_length=30, verbose_name='наименование типа')
 
     def __str__(self):
@@ -88,7 +83,7 @@ class PlaceType(models.Model):
 
 
 class Contact(models.Model):
-    """Контактные данные сотрудников, клиентов и др."""
+    """Contact data of employees, clients and so on."""
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     passport = models.CharField(max_length=20, null=True, blank=True)
@@ -103,9 +98,8 @@ class Contact(models.Model):
 
 
 class PhoneNumber(models.Model):
-    """Номера телефонов сотрудников, клиентов, и др."""
-    contact = models.ForeignKey(Contact, verbose_name='контакт',
-                                on_delete=models.PROTECT, null=True)
+    """Phone numbers of employees, clients and so on."""
+    contact = models.ForeignKey(Contact, verbose_name='контакт', on_delete=models.PROTECT, null=True)
     phone_number = models.CharField(max_length=30, verbose_name='номер телефона')
 
     def __str__(self):
@@ -117,9 +111,8 @@ class PhoneNumber(models.Model):
 
 
 class Email(models.Model):
-    """Адреса электронной почты сотрудников, клиентов и др."""
-    contact = models.ForeignKey(Contact, verbose_name='контакт',
-                                on_delete=models.PROTECT, null=True)
+    """Addresses of employees, clients and so on."""
+    contact = models.ForeignKey(Contact, verbose_name='контакт', on_delete=models.PROTECT, null=True)
     email = models.CharField(max_length=100, verbose_name='электронная почта')
 
     def __str__(self):
@@ -131,9 +124,8 @@ class Email(models.Model):
 
 
 class Url(models.Model):
-    """Ссылки на различные ресурсы, относящиеся к сотрудникам, клиентам и др."""
-    contact = models.ForeignKey(Contact, verbose_name='контакт',
-                                on_delete=models.PROTECT, null=True)
+    """URLs of different sources related to employees, clients and so on."""
+    contact = models.ForeignKey(Contact, verbose_name='контакт', on_delete=models.PROTECT, null=True)
     url = models.TextField(verbose_name='ссылка')
 
     def __str__(self):
@@ -174,12 +166,9 @@ class Address(models.Model):
 
 class GoodPlace(models.Model):
     """Места расположения товаров."""
-    place_type = models.ForeignKey(PlaceType, verbose_name='тип места',
-                                   on_delete=models.PROTECT, null=True)
-    address = models.ForeignKey(Address, verbose_name='адрес',
-                                on_delete=models.CASCADE)
-    contact = models.ForeignKey(Contact, verbose_name='контакт',
-                                on_delete=models.CASCADE)
+    place_type = models.ForeignKey(PlaceType, verbose_name='тип места', on_delete=models.PROTECT, null=True)
+    address = models.ForeignKey(Address, verbose_name='адрес', on_delete=models.CASCADE)
+    contact = models.ForeignKey(Contact, verbose_name='контакт', on_delete=models.CASCADE)
     name = models.CharField(max_length=300, verbose_name='название')
 
     def __str__(self):
@@ -204,13 +193,10 @@ class Currency(models.Model):
 
 class GoodCost(models.Model):
     """Сведения о ценах на товар в разных магазинах."""
-    good_place = models.ForeignKey(GoodPlace,
-                                   verbose_name='месторасположение товара',
-                                   on_delete=models.PROTECT, null=True)
-    good = models.ForeignKey(Good, verbose_name='товар',
-                             on_delete=models.PROTECT, null=True)
-    currency = models.ForeignKey(Currency, verbose_name='валюта',
-                                 on_delete=models.PROTECT, null=True)
+    good_place = models.ForeignKey(GoodPlace, verbose_name='месторасположение товара', on_delete=models.PROTECT,
+                                   null=True)
+    good = models.ForeignKey(Good, verbose_name='товар', on_delete=models.PROTECT, null=True)
+    currency = models.ForeignKey(Currency, verbose_name='валюта', on_delete=models.PROTECT, null=True)
     cost = models.FloatField(verbose_name='цена товара')
 
     def __str__(self):
@@ -223,10 +209,8 @@ class GoodCost(models.Model):
 
 class GoodCount(models.Model):
     """Количество каждого наименования товара в каждом магазине."""
-    good_place = models.ForeignKey(GoodPlace, verbose_name='местонахождение',
-                                   on_delete=models.PROTECT, null=True)
-    good = models.ForeignKey(Good, verbose_name='товар',
-                             on_delete=models.PROTECT, null=True)
+    good_place = models.ForeignKey(GoodPlace, verbose_name='местонахождение', on_delete=models.PROTECT, null=True)
+    good = models.ForeignKey(Good, verbose_name='товар', on_delete=models.PROTECT, null=True)
     count = models.FloatField(default=0.0, verbose_name='количество')
 
     def __str__(self):
@@ -239,12 +223,9 @@ class GoodCount(models.Model):
 
 class Employee(models.Model):
     """Сотрудники магазинов."""
-    contact = models.ForeignKey(Contact, verbose_name='контакт сотрудника',
-                                on_delete=models.CASCADE)
-    address = models.ForeignKey(Address, verbose_name='адрес сотрудника',
-                                on_delete=models.CASCADE)
-    job_place = models.ForeignKey(GoodPlace, verbose_name='место работы',
-                                  on_delete=models.PROTECT, null=True)
+    contact = models.ForeignKey(Contact, verbose_name='контакт сотрудника', on_delete=models.CASCADE)
+    address = models.ForeignKey(Address, verbose_name='адрес сотрудника', on_delete=models.CASCADE)
+    job_place = models.ForeignKey(GoodPlace, verbose_name='место работы', on_delete=models.PROTECT, null=True)
     position_name = models.CharField(max_length=50, verbose_name='должность')
 
     def __str__(self):
